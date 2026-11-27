@@ -22,6 +22,7 @@ jobs:
       matrix:
         package:
           - n8n-nodes-anaf-ro
+          - n8n-nodes-smartbill
     defaults:
       run:
         working-directory: packages/${{ matrix.package }}

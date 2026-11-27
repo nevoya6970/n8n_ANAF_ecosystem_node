@@ -1,0 +1,79 @@
+{
+  "name": "SmartBill - create invoice, check payment, download PDF",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "9c3a4d5e-0000-4000-8000-000000000001",
+      "name": "When clicking 'Execute workflow'",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [0, 0]
+    },
+    {
+      "parameters": {
+        "resource": "invoice",
+        "operation": "create",
+        "seriesName": "TEST",
+        "clientName": "Client Test SRL",
+        "clientCountry": "Romania",
+        "clientFields": { "vatCode": "RO12345674", "isTaxPayer": true, "email": "client@example.com" },
+        "productsInput": "fields",
+        "products": {
+          "product": [
+            { "name": "Consulting services", "quantity": 2, "measuringUnitName": "ora", "price": 100, "taxPercentage": 21, "isService": true }
+          ]
+        },
+        "additionalFields": { "isDraft": true }
+      },
+      "id": "9c3a4d5e-0000-4000-8000-000000000002",
+      "name": "Create invoice (draft)",
+      "type": "n8n-nodes-smartbill.smartBill",
+      "typeVersion": 1,
+      "position": [220, 0],
+      "credentials": {
+        "smartBillApi": { "id": "REPLACE_WITH_YOUR_CREDENTIAL_ID", "name": "SmartBill account" }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "invoice",
+        "operation": "getPaymentStatus",
+        "seriesName": "={{ $json.series }}",
+        "number": "={{ $json.number }}"
+      },
+      "id": "9c3a4d5e-0000-4000-8000-000000000003",
+      "name": "Get payment status",
+      "type": "n8n-nodes-smartbill.smartBill",
+      "typeVersion": 1,
+      "position": [440, 0],
+      "credentials": {
+        "smartBillApi": { "id": "REPLACE_WITH_YOUR_CREDENTIAL_ID", "name": "SmartBill account" }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "invoice",
+        "operation": "getPdf",
+        "seriesName": "={{ $('Create invoice (draft)').item.json.series }}",
+        "number": "={{ $('Create invoice (draft)').item.json.number }}",
+        "outputBinaryPropertyName": "data"
+      },
+      "id": "9c3a4d5e-0000-4000-8000-000000000004",
+      "name": "Get PDF",
+      "type": "n8n-nodes-smartbill.smartBill",
+      "typeVersion": 1,
+      "position": [660, 0],
+      "credentials": {
+        "smartBillApi": { "id": "REPLACE_WITH_YOUR_CREDENTIAL_ID", "name": "SmartBill account" }
+      }
+    }
+  ],
+  "connections": {
+    "When clicking 'Execute workflow'": { "main": [[{ "node": "Create invoice (draft)", "type": "main", "index": 0 }]] },
+    "Create invoice (draft)": { "main": [[{ "node": "Get payment status", "type": "main", "index": 0 }]] },
+    "Get payment status": { "main": [[{ "node": "Get PDF", "type": "main", "index": 0 }]] }
+  },
+  "settings": {},
+  "pinData": {},
+  "meta": { "templateCredsSetupCompleted": false }
+}
