@@ -1,0 +1,76 @@
+{
+  "name": "Oblio - create invoice, record payment, read it back",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "ad4b5e6f-0000-4000-8000-000000000001",
+      "name": "When clicking 'Execute workflow'",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [0, 0]
+    },
+    {
+      "parameters": {
+        "resource": "invoice",
+        "operation": "create",
+        "cif": "RO12345674",
+        "seriesName": "TEST",
+        "clientName": "Client Test SRL",
+        "clientFields": { "cif": "RO23456783", "vatPayer": true, "city": "Cluj-Napoca", "state": "Cluj" },
+        "productsInput": "fields",
+        "products": {
+          "product": [
+            { "name": "Consulting services", "price": 100, "quantity": 2, "measuringUnit": "ora", "vatPercentage": 21, "vatIncluded": false }
+          ]
+        },
+        "additionalFields": { "mentions": "Test invoice created from n8n" }
+      },
+      "id": "ad4b5e6f-0000-4000-8000-000000000002",
+      "name": "Create invoice",
+      "type": "n8n-nodes-oblio.oblio",
+      "typeVersion": 1,
+      "position": [220, 0],
+      "credentials": { "oblioApi": { "id": "REPLACE_WITH_YOUR_CREDENTIAL_ID", "name": "Oblio account" } }
+    },
+    {
+      "parameters": {
+        "resource": "invoice",
+        "operation": "collect",
+        "cif": "RO12345674",
+        "seriesName": "={{ $json.seriesName }}",
+        "number": "={{ $json.number }}",
+        "collectType": "Ordin de plata",
+        "collectFields": { "documentNumber": "OP 0001" }
+      },
+      "id": "ad4b5e6f-0000-4000-8000-000000000003",
+      "name": "Collect payment",
+      "type": "n8n-nodes-oblio.oblio",
+      "typeVersion": 1,
+      "position": [440, 0],
+      "credentials": { "oblioApi": { "id": "REPLACE_WITH_YOUR_CREDENTIAL_ID", "name": "Oblio account" } }
+    },
+    {
+      "parameters": {
+        "resource": "invoice",
+        "operation": "get",
+        "cif": "RO12345674",
+        "seriesName": "={{ $('Create invoice').item.json.seriesName }}",
+        "number": "={{ $('Create invoice').item.json.number }}"
+      },
+      "id": "ad4b5e6f-0000-4000-8000-000000000004",
+      "name": "Get invoice",
+      "type": "n8n-nodes-oblio.oblio",
+      "typeVersion": 1,
+      "position": [660, 0],
+      "credentials": { "oblioApi": { "id": "REPLACE_WITH_YOUR_CREDENTIAL_ID", "name": "Oblio account" } }
+    }
+  ],
+  "connections": {
+    "When clicking 'Execute workflow'": { "main": [[{ "node": "Create invoice", "type": "main", "index": 0 }]] },
+    "Create invoice": { "main": [[{ "node": "Collect payment", "type": "main", "index": 0 }]] },
+    "Collect payment": { "main": [[{ "node": "Get invoice", "type": "main", "index": 0 }]] }
+  },
+  "settings": {},
+  "pinData": {},
+  "meta": { "templateCredsSetupCompleted": false }
+}

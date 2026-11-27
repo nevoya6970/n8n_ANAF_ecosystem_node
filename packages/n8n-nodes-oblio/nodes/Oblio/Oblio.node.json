@@ -1,0 +1,18 @@
+{
+	"node": "n8n-nodes-oblio.oblio",
+	"nodeVersion": "1.0",
+	"codexVersion": "1.0",
+	"categories": ["Finance & Accounting"],
+	"resources": {
+		"credentialDocumentation": [
+			{
+				"url": "https://github.com/nevoya6970/n8n_ANAF_ecosystem_node/tree/main/packages/n8n-nodes-oblio#credentials"
+			}
+		],
+		"primaryDocumentation": [
+			{
+				"url": "https://github.com/nevoya6970/n8n_ANAF_ecosystem_node/tree/main/packages/n8n-nodes-oblio#readme"
+			}
+		]
+	}
+}
