@@ -54,7 +54,7 @@
     "n8n-workflow": "2.49.6",
     "prettier": "3.6.2",
     "release-it": "^21.1.0",
-    "typescript": "5.9.2",
+    "typescript": "7.0.2",
     "vitest": "3.2.7"
   },
   "peerDependencies": {
