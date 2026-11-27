@@ -1,0 +1,86 @@
+{
+  "name": "ANAF e-Factura - validate, upload (test environment) and check status",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "7a1e2b3c-0000-4000-8000-000000000001",
+      "name": "When clicking 'Execute workflow'",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [0, 0]
+    },
+    {
+      "parameters": {
+        "resource": "invoice",
+        "operation": "validate",
+        "documentStandard": "FACT1",
+        "xmlSource": "text",
+        "xmlContent": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!-- Replace with your UBL invoice XML. -->\n<Invoice xmlns=\"urn:oasis:names:specification:ubl:schema:xsd:Invoice-2\"/>",
+        "errorIfInvalid": true
+      },
+      "id": "7a1e2b3c-0000-4000-8000-000000000002",
+      "name": "Validate XML",
+      "type": "n8n-nodes-anaf-ro.anafEFactura",
+      "typeVersion": 1,
+      "position": [220, 0],
+      "credentials": {
+        "anafEFacturaOAuth2Api": { "id": "REPLACE_WITH_YOUR_CREDENTIAL_ID", "name": "ANAF e-Factura (test)" }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "invoice",
+        "operation": "upload",
+        "uploadStandard": "UBL",
+        "cif": "12345674",
+        "xmlSource": "text",
+        "xmlContent": "={{ $('Validate XML').params.xmlContent }}",
+        "uploadOptions": {}
+      },
+      "id": "7a1e2b3c-0000-4000-8000-000000000003",
+      "name": "Upload",
+      "type": "n8n-nodes-anaf-ro.anafEFactura",
+      "typeVersion": 1,
+      "position": [440, 0],
+      "credentials": {
+        "anafEFacturaOAuth2Api": { "id": "REPLACE_WITH_YOUR_CREDENTIAL_ID", "name": "ANAF e-Factura (test)" }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 2,
+        "unit": "minutes"
+      },
+      "id": "7a1e2b3c-0000-4000-8000-000000000004",
+      "name": "Wait for processing",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [660, 0],
+      "webhookId": "00000000-0000-4000-8000-000000000000"
+    },
+    {
+      "parameters": {
+        "resource": "invoice",
+        "operation": "getStatus",
+        "uploadIndex": "={{ $('Upload').item.json.uploadIndex }}"
+      },
+      "id": "7a1e2b3c-0000-4000-8000-000000000005",
+      "name": "Get Status",
+      "type": "n8n-nodes-anaf-ro.anafEFactura",
+      "typeVersion": 1,
+      "position": [880, 0],
+      "credentials": {
+        "anafEFacturaOAuth2Api": { "id": "REPLACE_WITH_YOUR_CREDENTIAL_ID", "name": "ANAF e-Factura (test)" }
+      }
+    }
+  ],
+  "connections": {
+    "When clicking 'Execute workflow'": { "main": [[{ "node": "Validate XML", "type": "main", "index": 0 }]] },
+    "Validate XML": { "main": [[{ "node": "Upload", "type": "main", "index": 0 }]] },
+    "Upload": { "main": [[{ "node": "Wait for processing", "type": "main", "index": 0 }]] },
+    "Wait for processing": { "main": [[{ "node": "Get Status", "type": "main", "index": 0 }]] }
+  },
+  "settings": {},
+  "pinData": {},
+  "meta": { "templateCredsSetupCompleted": false }
+}

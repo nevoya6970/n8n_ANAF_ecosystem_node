@@ -40,9 +40,12 @@
   "n8n": {
     "n8nNodesApiVersion": 1,
     "strict": true,
-    "credentials": [],
+    "credentials": [
+      "dist/credentials/AnafEFacturaOAuth2Api.credentials.js"
+    ],
     "nodes": [
-      "dist/nodes/AnafCompanyLookup/AnafCompanyLookup.node.js"
+      "dist/nodes/AnafCompanyLookup/AnafCompanyLookup.node.js",
+      "dist/nodes/AnafEFactura/AnafEFactura.node.js"
     ]
   },
   "devDependencies": {

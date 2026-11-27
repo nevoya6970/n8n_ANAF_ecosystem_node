@@ -1,0 +1,59 @@
+{
+  "name": "ANAF e-Factura - download invoices received yesterday",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [{ "field": "days", "triggerAtHour": 7 }]
+        }
+      },
+      "id": "8b2f3c4d-0000-4000-8000-000000000001",
+      "name": "Every morning",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [0, 0]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "getAll",
+        "cif": "12345674",
+        "period": "days",
+        "days": 1,
+        "returnAll": true,
+        "filters": { "filtru": "P" }
+      },
+      "id": "8b2f3c4d-0000-4000-8000-000000000002",
+      "name": "List received invoices",
+      "type": "n8n-nodes-anaf-ro.anafEFactura",
+      "typeVersion": 1,
+      "position": [220, 0],
+      "credentials": {
+        "anafEFacturaOAuth2Api": { "id": "REPLACE_WITH_YOUR_CREDENTIAL_ID", "name": "ANAF e-Factura (test)" }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "download",
+        "downloadId": "={{ $json.id }}",
+        "outputBinaryPropertyName": "data"
+      },
+      "id": "8b2f3c4d-0000-4000-8000-000000000003",
+      "name": "Download ZIP",
+      "type": "n8n-nodes-anaf-ro.anafEFactura",
+      "typeVersion": 1,
+      "position": [440, 0],
+      "credentials": {
+        "anafEFacturaOAuth2Api": { "id": "REPLACE_WITH_YOUR_CREDENTIAL_ID", "name": "ANAF e-Factura (test)" }
+      }
+    }
+  ],
+  "connections": {
+    "Every morning": { "main": [[{ "node": "List received invoices", "type": "main", "index": 0 }]] },
+    "List received invoices": { "main": [[{ "node": "Download ZIP", "type": "main", "index": 0 }]] }
+  },
+  "settings": {},
+  "pinData": {},
+  "meta": { "templateCredsSetupCompleted": false }
+}
