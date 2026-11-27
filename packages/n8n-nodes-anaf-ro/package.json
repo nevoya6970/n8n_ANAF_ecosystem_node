@@ -1,0 +1,63 @@
+{
+  "name": "n8n-nodes-anaf-ro",
+  "version": "0.1.0",
+  "description": "n8n community nodes for ANAF (Romania): public company/VAT lookup and RO e-Factura (OAuth2).",
+  "license": "MIT",
+  "homepage": "https://github.com/nevoya6970/n8n_ANAF_ecosystem_node/tree/main/packages/n8n-nodes-anaf-ro#readme",
+  "keywords": [
+    "n8n-community-node-package",
+    "n8n",
+    "anaf",
+    "e-factura",
+    "efactura",
+    "romania",
+    "cui",
+    "vat"
+  ],
+  "author": {
+    "name": "nevoya6970",
+    "email": "nevoya6970@users.noreply.github.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nevoya6970/n8n_ANAF_ecosystem_node.git",
+    "directory": "packages/n8n-nodes-anaf-ro"
+  },
+  "scripts": {
+    "build": "n8n-node build",
+    "build:watch": "tsc --watch",
+    "dev": "n8n-node dev",
+    "lint": "n8n-node lint",
+    "lint:fix": "n8n-node lint --fix",
+    "release": "n8n-node release",
+    "prepublishOnly": "n8n-node prerelease",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "files": [
+    "dist"
+  ],
+  "n8n": {
+    "n8nNodesApiVersion": 1,
+    "strict": true,
+    "credentials": [],
+    "nodes": [
+      "dist/nodes/AnafCompanyLookup/AnafCompanyLookup.node.js"
+    ]
+  },
+  "devDependencies": {
+    "@n8n/node-cli": "0.58.8",
+    "eslint": "9.32.0",
+    "n8n-workflow": "2.49.6",
+    "prettier": "3.6.2",
+    "release-it": "^21.1.0",
+    "typescript": "5.9.2",
+    "vitest": "3.2.7"
+  },
+  "peerDependencies": {
+    "n8n-workflow": "*"
+  },
+  "bugs": {
+    "url": "https://github.com/nevoya6970/n8n_ANAF_ecosystem_node/issues"
+  }
+}
